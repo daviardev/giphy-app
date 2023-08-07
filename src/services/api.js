@@ -14,7 +14,7 @@ const getCancelSRC = () => {
 
 const withAbort = fn => async (...args) => {
   const originalConfig = args[args.length - 1]
-  let { abort, ...config } = originalConfig
+  const { abort, ...config } = originalConfig
 
   if (typeof abort === 'function') {
     const { cancel, token } = getCancelSRC()
@@ -22,13 +22,12 @@ const withAbort = fn => async (...args) => {
     abort(cancel)
   }
   try {
-    return await fn(...args.slice(0, args.length - 1), config);
+    return await fn(...args.slice(0, args.length - 1), config)
   } catch (err) {
     didAbort(err) && (err.aborted = true)
     console.error(err)
     throw err
   }
-
 }
 
 const api = axios => {
